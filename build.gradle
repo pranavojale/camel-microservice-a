@@ -8,6 +8,8 @@ group = 'com.ojale.pranav'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
+project.ext['camelVersion'] = '3.8.0'
+
 repositories {
 	mavenCentral()
 }
@@ -15,7 +17,7 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.apache.camel.springboot:camel-spring-boot-starter:3.8.0'
+	implementation "org.apache.camel.springboot:camel-spring-boot-starter:${camelVersion}"
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
