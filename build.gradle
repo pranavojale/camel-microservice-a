@@ -6,7 +6,7 @@ plugins {
 
 group = 'com.ojale.pranav'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = '8'
 
 project.ext['camelVersion'] = '3.8.0'
 
@@ -17,7 +17,10 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	// https://mvnrepository.com/artifact/org.springframework.amqp/spring-rabbit
+	implementation group: 'org.springframework.amqp', name: 'spring-rabbit', version: '2.3.6'
 	implementation "org.apache.camel.springboot:camel-spring-boot-starter:${camelVersion}"
+	implementation "org.apache.camel:camel-rabbitmq:${camelVersion}"
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
