@@ -10,7 +10,9 @@ public class ActiveMqSenderRouter extends RouteBuilder {
         // timer
         from("timer:active-mq-timer?period=10000")
                 .transform().constant("My message for Active MQ")
+                .log("${body}")
                 .to("rabbitmq://localhost:5672/pranavoj?queue=my-rabbitmq-queue&autoDelete=false");
+                //.to("rabbitmq:pranavoj?queue=my-rabbitmq-queue");
         // queue
     }
 }
