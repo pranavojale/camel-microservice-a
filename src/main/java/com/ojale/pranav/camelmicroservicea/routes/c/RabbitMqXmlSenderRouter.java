@@ -4,11 +4,11 @@ import org.apache.camel.builder.RouteBuilder;
 import org.springframework.stereotype.Component;
 
 //@Component
-public class ActiveMqFileSenderRouter extends RouteBuilder {
+public class RabbitMqXmlSenderRouter extends RouteBuilder {
     @Override
     public void configure() throws Exception {
-        from("file:files/json")
+        from("file:files/xml")
                 .log("${body}")
-                .to("rabbitmq://localhost:5672/pranavoj?queue=my-rabbitmq-queue&autoDelete=false");
+                .to("rabbitmq://localhost:5672/pranavoj-xml?queue=my-rabbitmq-xml-queue&autoDelete=false");
     }
 }
