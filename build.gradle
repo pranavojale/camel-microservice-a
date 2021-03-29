@@ -21,6 +21,7 @@ dependencies {
 	implementation "org.apache.camel.springboot:camel-spring-boot-starter:${camelVersion}"
 	implementation "org.apache.camel:camel-rabbitmq:${camelVersion}"
 	implementation "org.apache.camel.springboot:camel-kafka-starter:${camelVersion}"
+	implementation "org.apache.camel.springboot:camel-http-starter:${camelVersion}"
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
