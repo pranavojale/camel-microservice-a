@@ -39,12 +39,30 @@ public class EipPatternsRouter extends RouteBuilder {
                 .to("rabbitmq://localhost:5672/pranavoj?queue=my-rabbitmq-queue&autoDelete=false");*/
 
         // Aggregation Pattern
-        from("file:files/aggregate-json")
+        /*from("file:files/aggregate-json")
                 .unmarshal().json(JsonLibrary.Jackson, CurrencyExchange.class)
                 .aggregate(simple("${body.to}"), new ArrayListAggregationStrategy())
                 .completionSize(3)
                 //.completionTimeout(10000l)
-                .to("log:aggregate-json");
+                .to("log:aggregate-json");*/
+
+        // Routing Slip pattern
+
+        String routingSlip = "direct:endPoint1,direct:endPoint2";
+        //String routingSlip = "direct:endPoint1,direct:endPoint2,direct:endPoint3";
+
+        from("timer:routingSlip?period=10000")
+                .transform().constant("My Message is Hardcoded")
+                .routingSlip(simple(routingSlip));
+
+        from("direct:endPoint1")
+                .to("log:directEndPoint1");
+
+        from("direct:endPoint2")
+                .to("log:directEndPoint2");
+
+        from("direct:endPoint3")
+                .to("log:directEndPoint3");
     }
 
 
