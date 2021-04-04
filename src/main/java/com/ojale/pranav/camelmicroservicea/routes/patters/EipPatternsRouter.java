@@ -1,19 +1,28 @@
 package com.ojale.pranav.camelmicroservicea.routes.patters;
 
 import com.ojale.pranav.camelmicroservicea.routes.model.CurrencyExchange;
+import org.apache.camel.Body;
+import org.apache.camel.ExchangeProperties;
+import org.apache.camel.Headers;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class EipPatternsRouter extends RouteBuilder {
 
     @Autowired
     private SplitterComponent splitterComponent;
+
+    @Autowired
+    private DynamicRouterBean dynamicRouterBean;
 
     @Override
     public void configure() throws Exception {
@@ -51,9 +60,21 @@ public class EipPatternsRouter extends RouteBuilder {
         String routingSlip = "direct:endPoint1,direct:endPoint2";
         //String routingSlip = "direct:endPoint1,direct:endPoint2,direct:endPoint3";
 
-        from("timer:routingSlip?period=10000")
+        /*from("timer:routingSlip?period=10000")
                 .transform().constant("My Message is Hardcoded")
-                .routingSlip(simple(routingSlip));
+                .routingSlip(simple(routingSlip));*/
+
+        // Dynamic Routing
+
+        // Step 1, Step 2, Step 3
+
+        from("timer:dynamicRouting?period=10000")
+                .transform().constant("My Message is Hardcoded")
+                .dynamicRouter(method(dynamicRouterBean, "decideTheNextEndpoint"));
+
+        // Endpoint 1
+        // Endpoint 2
+        // Endpoint 3
 
         from("direct:endPoint1")
                 .to("log:directEndPoint1");
@@ -72,5 +93,29 @@ public class EipPatternsRouter extends RouteBuilder {
 class SplitterComponent{
     public List<String> splitInput(String body){
         return Arrays.asList("ABC", "DEF", "PQR");
+    }
+}
+
+@Component
+class DynamicRouterBean{
+    Logger LOGGER = LoggerFactory.getLogger(DynamicRouterBean.class);
+
+    int invocations;
+
+    public String decideTheNextEndpoint(@ExchangeProperties Map<String, String> properties,
+                                        @Headers Map<String, String> headers,
+                                        @Body String body){
+        LOGGER.info("{} {} {}", properties, headers, body);
+
+        invocations++;
+
+        if(invocations%3 == 0){
+            return "direct:endPoint1";
+        }
+        if(invocations%3 == 1){
+            return "direct:endPoint2, direct:endPoint3";
+        }
+
+        return null;
     }
 }
