@@ -26,6 +26,12 @@ public class EipPatternsRouter extends RouteBuilder {
 
     @Override
     public void configure() throws Exception {
+        // To Enable Tracing
+        getContext().setTracing(true);
+
+        // Dead letter queue (if message fails processing)
+        errorHandler(deadLetterChannel("rabbitmq://localhost:5672/pranavoj?queue=dead-letter-queue&autoDelete=false"));
+
         // Pipeline Pattern
         // Content Based Routing - choice()
 
@@ -77,6 +83,7 @@ public class EipPatternsRouter extends RouteBuilder {
         // Endpoint 3
 
         from("direct:endPoint1")
+                .wireTap("log:wire-tap")    // Additional End Point
                 .to("{{endpoint-for-logging-1}}");
 
         from("direct:endPoint2")
